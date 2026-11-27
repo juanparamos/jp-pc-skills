@@ -1,0 +1,10 @@
+# Reglas personales (nombres de clientes, equipo, documentos y cuentas): nunca a Git
+*.local.ps1
+*_local.py
+overrides.txt
+
+# Planes, registros y salidas generadas
+*.csv
+*.log
+__pycache__/
+insp/
