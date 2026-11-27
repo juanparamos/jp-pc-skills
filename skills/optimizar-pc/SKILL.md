@@ -28,11 +28,12 @@ Ya hechos: MAT-Video-Editor y Mat web. El diagnóstico lista los que falten.
 
 **Escritorio sin íconos / carpetas que no cargan.** Reiniciar OneDrive (`Stop-Process -Name OneDrive -Force; Start-Process "$env:LOCALAPPDATA\Microsoft\OneDrive\OneDrive.exe"`) y luego el Explorador (`Stop-Process -Name explorer -Force`; se reabre solo).
 
-**Energía para dejar a Claude trabajando.** La pantalla se apaga pronto, el PC no se suspende enchufado:
+**Energía para dejar a Claude trabajando.** Regla de JP: **tapa abierta = Claude sigue trabajando; tapa cerrada = se suspende todo.** La pantalla se apaga pronto, el PC no se suspende enchufado mientras la tapa esté abierta:
 - `powercfg /change monitor-timeout-ac 3` y `monitor-timeout-dc 2`
 - `powercfg /change standby-timeout-ac 0` (nunca, enchufado) y `standby-timeout-dc 60`
 - Acceso directo "Apagar pantalla" en el Escritorio → `C:\Users\PERSONAL\.dev-cache\herramientas\apagar-pantalla.ps1` (apaga la pantalla al instante sin suspender).
-- La acción de la tapa está oculta y pide admin: decirle a JP que la ponga en "No hacer nada" en Panel de control > Opciones de energía > Elegir el comportamiento al cerrar la tapa.
+- Tapa cerrada = Suspender (enchufado y batería). Se cambia sin admin aunque `powercfg /q` no la muestre: `powercfg /setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 1` (igual con `/setdcvalueindex`) y `powercfg /setactive SCHEME_CURRENT`. Verificar leyendo `ACSettingIndex`/`DCSettingIndex` en `HKLM:\SYSTEM\CurrentControlSet\Control\Power\User\PowerSchemes\<plan>\<subgrupo>\<tapa>` (0 = nada, 1 = suspender, 2 = hibernar, 3 = apagar).
+- Al cerrar la tapa con monitor externo, el externo pasa a ser la pantalla principal mientras esté sola: es normal en Windows, no es un error.
 
 **Antivirus.** `Get-MpComputerStatus` (servicio, tiempo real, firmas, protección contra alteraciones) y `Update-MpSignature` si las firmas tienen más de un día. Optimizar no desprotege: lo que se apaga son apps de inicio, no seguridad.
 
